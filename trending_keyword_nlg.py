@@ -1,6 +1,6 @@
 #If you'd like to install packages that aren't installed by default, uncomment the next two lines
 #import sys\n",
-#!{sys.executable} -m pip install langchain openai pandas spacy matplotlib wordcloud pinecone-client
+#!{sys.executable} -m pip install langchain openai pandas spacy matplotlib wordcloud pinecone-client langchain-community arxiv pymupdf
 
 import openai
 import pandas as pd
@@ -8,7 +8,7 @@ import spacy
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from langchain.chains import RetrievalQA
-from langchain.document_loaders import ACMDigitalLibraryLoader
+from langchain_community.document_loaders import ArxivLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone
 import pinecone
@@ -24,9 +24,9 @@ def fetch_technology_topic():
 
 topic = fetch_technology_topic()
 
-# Step 2: Search topic using ACM Digital Library and retrieve abstracts
-def fetch_acm_papers(topic):
-    #loader = ACMDigitalLibraryLoader(query=topic) todo: write this loader!
+# Step 2: Search topic using arxiv and retrieve abstracts
+def fetch_arxiv_papers(topic):
+    #loader = arxivDigitalLibraryLoader(query=topic) todo: write this loader!
     from langchain_community.document_loaders import ArxivLoader
 
     # Supports all arguments of `ArxivAPIWrapper`
@@ -39,7 +39,7 @@ def fetch_acm_papers(topic):
     docs = loader.get_summaries_as_docs()
     return [doc.page_content for doc in docs]
 
-papers = fetch_acm_papers(topic)
+papers = fetch_arxiv_papers(topic)
 
 # Step 3: Extract keywords from summaries using spaCy
 def extract_keywords(texts, n_top=25):
