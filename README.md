@@ -1,7 +1,7 @@
 <h1><b>Trending Keyword-Based Natural Language Generation</b></h1>
 
 <p>
-  <a href="https://www.linkedin.com/pulse/natural-language-generation-using-trending-keywords-austin-willis">
+  <a href="https://www.linkedin.com/feed/update/urn:li:activity:7265881345527037952">
     <b>Read the original LinkedIn post about this project</b>
   </a>
 </p>
@@ -113,7 +113,7 @@
 <ul>
   <li>
     <b>Original LinkedIn Post:</b>
-    <a href="https://www.linkedin.com/pulse/natural-language-generation-using-trending-keywords-austin-willis">
+    <a href="https://www.linkedin.com/feed/update/urn:li:activity:7265881345527037952">
       Natural Language Generation Using Trending Keywords
     </a>
   </li>
