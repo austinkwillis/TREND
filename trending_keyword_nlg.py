@@ -26,13 +26,22 @@ topic = fetch_technology_topic()
 
 # Step 2: Search topic using ACM Digital Library and retrieve abstracts
 def fetch_acm_papers(topic):
-    loader = ACMDigitalLibraryLoader(query=topic)
-    documents = loader.load()
-    return [doc.page_content for doc in documents]
+    #loader = ACMDigitalLibraryLoader(query=topic) todo: write this loader!
+    from langchain_community.document_loaders import ArxivLoader
+
+    # Supports all arguments of `ArxivAPIWrapper`
+    loader = ArxivLoader(
+        query=topic,
+        load_max_docs=2,
+        # doc_content_chars_max=1000,
+        # load_all_available_meta=False,
+    )
+    docs = loader.get_summaries_as_docs()
+    return [doc.page_content for doc in docs]
 
 papers = fetch_acm_papers(topic)
 
-# Step 3: Extract keywords from abstracts using spaCy
+# Step 3: Extract keywords from summaries using spaCy
 def extract_keywords(texts, n_top=25):
     nlp = spacy.load("en_core_web_sm")
     all_text = " ".join(texts)
@@ -43,7 +52,7 @@ def extract_keywords(texts, n_top=25):
 
 keywords = extract_keywords(papers)
 
-# Visualize keywords as a WordCloud
+# Visualize keywords as a WordCloud for a brief look at the topic
 wordcloud = WordCloud(width=800, height=400).generate_from_frequencies(keywords)
 plt.figure(figsize=(10, 5))
 plt.imshow(wordcloud, interpolation="bilinear")
@@ -51,7 +60,7 @@ plt.axis("off")
 plt.show()
 
 # Step 4: Pick a semi-random keyword
-chosen_keyword = keywords.index[0]  # Using the top keyword for simplicity
+chosen_keyword = keywords.index[0]  # Using the top keyword for simplicity todo: incorporate top 10-20
 print(f"Chosen Keyword: {chosen_keyword}")
 
 # Step 5: Use RAG (with Pinecone) to retrieve additional context and generate text
@@ -72,7 +81,7 @@ qa_chain = RetrievalQA.from_chain_type(
 def generate_blog_post(keyword):
     context = qa_chain.run(f"Write a detailed explanation about {keyword}.")
     response = openai.Completion.create(
-        engine="text-davinci-003",
+        engine="gpt-4o",
         prompt=f"Write a blog post titled 'An Introduction to {keyword}' based on the following context:\n\n{context}",
         max_tokens=500,
     )
